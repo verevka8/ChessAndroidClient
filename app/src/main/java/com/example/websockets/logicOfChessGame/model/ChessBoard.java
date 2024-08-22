@@ -1,7 +1,9 @@
 package com.example.websockets.logicOfChessGame.model;
 
-import com.example.websockets.logicOfChessGame.entity.ChessCell;
 import com.example.websockets.logicOfChessGame.entity.pieces.Pawn;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChessBoard {
     private ChessCell[][] board = new ChessCell[8][8];
@@ -19,34 +21,28 @@ public class ChessBoard {
                     }
                 }
                 else{
-                    board[x][y] = new ChessCell(x,y);
+                    board[y][x] = new ChessCell(x,y);
                 }
             }
         }
     }
     public ChessCell getCell(int x, int y) {
-        if (x >= 0 && x <= 7 && y >= 0 && y <= 7) {
-            return board[y][x];
-        }
-        return null;
+        assert (x >= 0 && x<= 7 && y >= 0 && y <= 7);
+        return board[y][x];
     }
 
     public ChessCell[][] getBoard() {
         return board;
     }
 
-    public void highlightMoves(ChessCell cell) {
-        clearHighlights();
+    public List<ChessCell> getPossibleMoves(ChessCell selectedCell) {
         // TODO: исправить хардкод
-        board[cell.getY()-1][cell.getX()+1].setHighlighted(true);
-        board[cell.getY()-1][cell.getX()-1].setHighlighted(true);
+        List<ChessCell> possibleMoves = new ArrayList<>();
+        possibleMoves.add(board[selectedCell.getY()-1][selectedCell.getX()+1]);
+        possibleMoves.add(board[selectedCell.getY()-1][selectedCell.getX()-1]);
+        return possibleMoves;
     }
-
-    private void clearHighlights() {
-        for (int y = 0; y < board.length; y++) {
-            for (int x = 0; x < board[y].length; x++) {
-                board[y][x].setHighlighted(false);
-            }
-        }
+    public void movePiece(ChessCell fromCell, ChessCell toCell){
+        toCell.movePiecesFrom(fromCell);
     }
 }

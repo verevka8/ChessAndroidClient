@@ -10,5 +10,6 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:textAlignment="center"
-        android:textSize="40sp" />
+        android:textSize="40sp"
+        android:text=""/>
 </LinearLayout>

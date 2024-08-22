@@ -7,19 +7,42 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.websockets.R;
-import com.example.websockets.logicOfChessGame.controller.GameController;
-import com.example.websockets.logicOfChessGame.entity.ChessCell;
+import com.example.websockets.logicOfChessGame.model.ChessBoard;
+import com.example.websockets.logicOfChessGame.model.ChessCell;
+import com.example.websockets.logicOfChessGame.viewModel.BoardViewModel;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 public class AdapterRowOfChessCells extends RecyclerView.Adapter<AdapterRowOfChessCells.ViewHolderCell> {
 
-    private ChessCell[] rowOfCell;
-    private TextView textView;
+    private BoardViewModel viewModel;
+    private List<ChessCell> highlightedCells;
+    private int yСoordinate;
+    private final int COUNTOFCOLUMN = 8;
 
-    public AdapterRowOfChessCells(ChessCell[] rowOfCell) {
-        this.rowOfCell = rowOfCell;
+    public AdapterRowOfChessCells(LifecycleOwner lifecycleOwner, BoardViewModel viewModel,int yCoordinate) {
+        this.viewModel = viewModel;
+        this.yСoordinate = yCoordinate;
+        viewModel.getPossibleMovesLiveData().observe(lifecycleOwner, new Observer<List<ChessCell>>() {
+            @Override
+            public void onChanged(List<ChessCell> possibleMoves) {
+                highlightedCells = possibleMoves;
+                notifyDataSetChanged();// TODO: оптимизировать
+            }
+        });
+
+        viewModel.getBoardLiveData().observe(lifecycleOwner, new Observer<ChessBoard>() {
+            @Override
+            public void onChanged(ChessBoard chessBoard) {
+                notifyDataSetChanged(); // TODO: оптимизировать
+            }
+        });
     }
 
     @NonNull
@@ -31,20 +54,16 @@ public class AdapterRowOfChessCells extends RecyclerView.Adapter<AdapterRowOfChe
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderCell holder, int position) {
-        ChessCell cell = rowOfCell[position];
-        textView = holder.itemView.findViewById(R.id.textViewTypePieces);
-        holder.itemView.setOnClickListener(view -> {
-            if (cell.isHighlighted()){
-                GameController.getInstance().
-            }
-            else {GameController.getInstance().highlightPossibleMoves(cell);}
-        });
+        ChessCell cell = viewModel.getBoardLiveData().getValue().getCell(position,yСoordinate);
+        TextView textView = holder.itemView.findViewById(R.id.textViewTypePieces);
 
         if (cell.getPieces() != null){
             textView.setText(cell.getPieces().getType());
             textView.setTextColor(cell.getPieces().getIsOwnPieces()?Color.WHITE:Color.BLACK);
+        }else{
+            textView.setText("") ;
         }
-        if (cell.isHighlighted()){
+        if (highlightedCells != null && highlightedCells.contains(cell)){
             holder.itemView.setBackgroundColor(Color.GREEN);
         }
         else {
@@ -54,12 +73,15 @@ public class AdapterRowOfChessCells extends RecyclerView.Adapter<AdapterRowOfChe
                 holder.itemView.setBackgroundColor(Color.parseColor("#b58863"));
             }
         }
-
+        if (cell.getPieces() != null && cell.getPieces().getIsOwnPieces() || cell.getPieces() == null && highlightedCells != null &&  highlightedCells.contains(cell))
+            holder.itemView.setOnClickListener(view -> {
+                viewModel.onCellClicked(cell);
+            });
     }
 
     @Override
     public int getItemCount() {
-        return rowOfCell.length;
+        return COUNTOFCOLUMN;
     }
 
     public static class ViewHolderCell extends RecyclerView.ViewHolder {

@@ -1,4 +1,6 @@
-package com.example.websockets.logicOfChessGame.entity;
+package com.example.websockets.logicOfChessGame.model;
+
+import androidx.annotation.NonNull;
 
 import com.example.websockets.logicOfChessGame.entity.pieces.Pieces;
 
@@ -6,7 +8,6 @@ public class ChessCell {
     private Pieces pieces = null;
     private int x;
     private int y;
-    private boolean isHighlighted = false;
 
 
     public ChessCell(Pieces pieces, int x, int y) {
@@ -24,6 +25,7 @@ public class ChessCell {
         return pieces;
     }
 
+
     public int getX() {
         return x;
     }
@@ -32,11 +34,11 @@ public class ChessCell {
         return y;
     }
 
-    public boolean isHighlighted() {
-        return isHighlighted;
+    void movePiecesFrom(ChessCell fromCell){
+        this.pieces = fromCell.getPieces();
+        fromCell.clearPieces();
     }
-
-    public void setHighlighted(boolean highlighted) {
-        isHighlighted = highlighted;
+    void clearPieces(){
+        this.pieces = null;
     }
 }
