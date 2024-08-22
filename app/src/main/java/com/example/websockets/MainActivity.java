@@ -6,12 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.websockets.logicBoardView.AdapterBoardOfRows;
-import com.example.websockets.logicBoardView.ChessBoard;
+import com.example.websockets.logicOfChessGame.controller.GameController;
+import com.example.websockets.logicOfChessGame.model.ChessBoard;
+import com.example.websockets.logicOfChessGame.view.AdapterBoardOfRows;
 
 
 public class MainActivity extends AppCompatActivity {
-    private MyWebSockets myWebSockets;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,9 +19,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        ChessBoard board = new ChessBoard();
+        GameController controller = GameController.getInstance();
+
         RecyclerView recyclerView = findViewById(R.id.test1);
-        AdapterBoardOfRows adapter = new AdapterBoardOfRows(board.getBoard());
+        AdapterBoardOfRows adapter = new AdapterBoardOfRows(controller.getChessBoard().getBoard());
+        controller.setAdapter(adapter);
         recyclerView.setAdapter(adapter);
     }
 }
