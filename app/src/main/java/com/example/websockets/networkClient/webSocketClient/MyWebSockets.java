@@ -1,38 +1,54 @@
-package com.example.websockets;
+package com.example.websockets.networkClient.webSocketClient;
 
 import android.annotation.SuppressLint;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.SplittableRandom;
+
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
-
-
-import java.util.Collections;
+import ua.naiksoftware.stomp.dto.StompCommand;
+import ua.naiksoftware.stomp.dto.StompHeader;
+import ua.naiksoftware.stomp.dto.StompMessage;
 
 public class MyWebSockets {
     private StompClient client;
     private final String TAG = "qqq";
+    private final String BASE_URL = "ws://192.168.1.245:8080/gs";
+    private String sessionId;
+
+
+    public MyWebSockets(String sessionId) {
+        this.sessionId = sessionId;
+        connectToSession();
+    }
 
     @SuppressLint("CheckResult")
-    public MyWebSockets() {
-
-        client = Stomp.over(Stomp.ConnectionProvider.JWS, "ws://192.168.1.245:8080/gs");
+    private void connectToSession(){
+        client = Stomp.over(Stomp.ConnectionProvider.JWS, BASE_URL);
         client.connect();
-        client.topic("/topic/greetings").subscribe(topicMessage -> {
+        client.topic("/topic/session/" + sessionId).subscribe(topicMessage -> {
             Log.d(TAG, "Received: " + topicMessage.getPayload());
         }, throwable -> {
             Log.d(TAG, "Error on subscribe", throwable);
         });
 
-        // Логируем статус подключения
         client.lifecycle().subscribe(lifecycleEvent -> {
             switch (lifecycleEvent.getType()) {
+
                 case OPENED:
                     Log.d(TAG, "Stomp connection opened");
                     break;
+
                 case ERROR:
-                    Log.d(TAG, "Error", lifecycleEvent.getException());
+                    Log.e(TAG, "Error", lifecycleEvent.getException());
                     break;
+
                 case CLOSED:
                     Log.d(TAG, "Stomp connection closed");
                     break;
@@ -40,11 +56,16 @@ public class MyWebSockets {
         });
     }
 
-    // Метод для отправки сообщений
     @SuppressLint("CheckResult")
     public void sendMessage(String message) {
         if (client.isConnected()) {
-            client.send("/app/hello", message).subscribe(() -> {
+
+            List<StompHeader> headers = new ArrayList<>();
+            headers.add(new StompHeader(StompHeader.DESTINATION,"/app/game"));
+            headers.add(new StompHeader("sessionId","1122"));
+            StompMessage stompMessage = new StompMessage(StompCommand.SEND, headers,message);
+
+            client.send(stompMessage).subscribe(() -> {
                 Log.d(TAG, "Message sent successfully");
             }, throwable -> {
                 Log.d(TAG, "Error sending message", throwable);
@@ -54,7 +75,6 @@ public class MyWebSockets {
         }
     }
 
-    // Закрытие соединения при завершении работы
     public void disconnect() {
         if (client != null) {
             client.disconnect();

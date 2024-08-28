@@ -1,7 +1,5 @@
 package com.example.websockets.logicOfChessGame.model;
 
-import androidx.annotation.NonNull;
-
 import com.example.websockets.logicOfChessGame.entity.pieces.Pieces;
 
 public class ChessCell {
