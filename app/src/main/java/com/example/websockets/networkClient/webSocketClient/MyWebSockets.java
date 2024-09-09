@@ -4,11 +4,7 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.SplittableRandom;
 
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
@@ -18,8 +14,8 @@ import ua.naiksoftware.stomp.dto.StompMessage;
 
 public class MyWebSockets {
     private StompClient client;
-    private final String TAG = "qqq";
-    private final String BASE_URL = "ws://192.168.1.245:8080/gs";
+    private final String TAG = "MyWebSockets: qqq";
+    private final String BASE_URL = "ws://192.168.1.246:8080/gs";
     private String sessionId;
 
 
@@ -62,7 +58,7 @@ public class MyWebSockets {
 
             List<StompHeader> headers = new ArrayList<>();
             headers.add(new StompHeader(StompHeader.DESTINATION,"/app/game"));
-            headers.add(new StompHeader("sessionId","1122"));
+            headers.add(new StompHeader("sessionId",sessionId));
             StompMessage stompMessage = new StompMessage(StompCommand.SEND, headers,message);
 
             client.send(stompMessage).subscribe(() -> {

@@ -1,10 +1,10 @@
 package com.example.websockets.networkClient.httpClient.entity.response;
 
-public class ResponseSessionCreation {
+public class ResponseSessionInfo {
     private String stateOfCreation;
     private String sessionId;
 
-    public ResponseSessionCreation(String stateOfCreation, String sessionId) {
+    public ResponseSessionInfo(String stateOfCreation, String sessionId) {
         this.stateOfCreation = stateOfCreation;
         this.sessionId = sessionId;
     }

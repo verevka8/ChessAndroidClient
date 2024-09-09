@@ -1,7 +1,6 @@
 package com.example.websockets.logicOfChessGame.view;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import com.example.websockets.logicOfChessGame.model.ChessBoard;
 import com.example.websockets.logicOfChessGame.model.ChessCell;
 import com.example.websockets.logicOfChessGame.viewModel.BoardViewModel;
 
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -48,7 +46,7 @@ public class AdapterRowOfChessCells extends RecyclerView.Adapter<AdapterRowOfChe
     @NonNull
     @Override
     public ViewHolderCell onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chess_cell, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chess_cell, parent, false);
         return new ViewHolderCell(view);
     }
 

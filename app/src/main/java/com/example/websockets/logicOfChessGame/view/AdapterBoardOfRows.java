@@ -9,7 +9,6 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.websockets.R;
-import com.example.websockets.logicOfChessGame.model.ChessCell;
 import com.example.websockets.logicOfChessGame.viewModel.BoardViewModel;
 
 public class AdapterBoardOfRows extends RecyclerView.Adapter<AdapterBoardOfRows.ViewHolderRow>  {
@@ -26,7 +25,7 @@ public class AdapterBoardOfRows extends RecyclerView.Adapter<AdapterBoardOfRows.
     @NonNull
     @Override
     public ViewHolderRow onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_of_chess_cells, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row_of_chess_cells, parent, false);
         return new ViewHolderRow(view);
     }
 
