@@ -7,6 +7,7 @@ import com.example.chessgame.network.httpClient.RetrofitService;
 import com.example.chessgame.network.httpClient.callback.MyCallBack;
 import com.example.chessgame.network.webSocketClient.MyWebSockets;
 import com.example.chessgame.network.webSocketClient.entity.ChessMove;
+import com.example.chessgame.network.webSocketClient.entity.MessageWrapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -70,9 +71,10 @@ public class NetworkClient implements MyWebSockets.WebSocketMessageCallback {
         webSockets.connectToSession(sessionId);
     }
 
-    public <T> void sendMessage(T object, String sessionId){
-        String json = gson.toJson(object);
-        webSockets.sendMessage(json,sessionId);
+    public <T> void sendMessage(T object, String typeJson, String sessionId){
+        String jsonObject = gson.toJson(object);
+        String jsonMessageWrapper = gson.toJson(new MessageWrapper(jsonObject,typeJson));
+        webSockets.sendMessage(jsonMessageWrapper,sessionId);
     }
 
     @Override

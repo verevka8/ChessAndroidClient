@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.chessgame.network.httpClient.callback.MyCallBack;
 import com.example.chessgame.network.httpClient.entity.response.SessionInfo;
 import com.example.chessgame.network.webSocketClient.entity.ChessMove;
+import com.example.chessgame.network.webSocketClient.entity.MessageWrapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -48,9 +49,8 @@ public class SessionManager {
     private void connectToSession(){
         client.connectToSession(sessionInfo.getSessionId());
     }
-
     public void sendMove(ChessMove move){
-        client.sendMessage(move,sessionInfo.getSessionId());
+        client.sendMessage(move,"ChessMove",sessionInfo.getSessionId());
     }
 
     public void setListener(ChessMoveMessageListener listener) {
@@ -68,3 +68,5 @@ public class SessionManager {
         void onMessageReceived(ChessMove move);
     }
 }
+
+
